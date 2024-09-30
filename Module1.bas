@@ -17,7 +17,7 @@ Sub ListSalesOrders()
     ws3.Name = "Sheet2"
     ws2.Name = "Sheet3"
    
-'Copy the Raw Data to Sheet1/Sheet2
+'Copy the Raw Data to Sheet1
     With ws
         Dim sourceSheet As Worksheet
         Dim destinationSheet As Worksheet
@@ -54,7 +54,7 @@ Sub ListSalesOrders()
         .AutoFilterMode = False
     End With
     
-'Copy/paste all data, except for Material Number Column, from Sheet1/Sheet2 to Sheet3/Sheet4
+'Copy/paste all data, except for Material Number Column, from Sheet1 to Sheet3
     With ws
         Dim sourceSheet2 As Worksheet
         Dim destinationSheet2 As Worksheet
@@ -65,7 +65,7 @@ Sub ListSalesOrders()
         sourceRange2.Copy destinationSheet2.Range("A1")
     End With
 
-'Remove Dupes by Sales Document on last sheet (Sheet3/Sheet4)
+'Remove Dupes by Sales Document on last sheet (Sheet3)
     With ws2
         .AutoFilterMode = False
         Set Rng3 = .Range("A:F")
@@ -75,7 +75,7 @@ Sub ListSalesOrders()
         .AutoFilterMode = False
     End With
 
-'Copy/paste only the Created by Column from Sheet3/Sheet4 to Sheet2/Sheet3
+'Copy/paste only the Created by Column from Sheet3 to Sheet2
     With ws2
         Dim sourceSheet3 As Worksheet
         Dim destinationSheet3 As Worksheet
@@ -86,7 +86,7 @@ Sub ListSalesOrders()
         sourceRange3.Copy destinationSheet3.Range("A1")
     End With
 
-'Remove Created by Column Dupes on Sheet2/Sheet3
+'Remove Created by Column Dupes on Sheet2
     With ws3
         .AutoFilterMode = False
         Set Rng4 = .Range("A:A")
@@ -109,7 +109,7 @@ Sub ListSalesOrders()
         Next i
     End With
     
-'Add SO Entered - Line Items, SO Entered, and Orders per Day columns and corresponding formulas to Sheet2/Sheet3
+'Add SO Entered - Line Items, SO Entered, and Orders per Day columns and corresponding formulas to Sheet2
     With ws3
         Sheets("Sheet2").Activate
         Cells(1, 2).Value = "SO Entered - Line Items"
