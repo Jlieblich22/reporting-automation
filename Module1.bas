@@ -4,19 +4,16 @@ Sub ListSalesOrders()
     Dim ws As Worksheet
     Dim ws2 As Worksheet
     Dim ws3 As Worksheet
-    Dim lRow As Long
-   
+    Dim lRow As Long   
 'Change Original Export sheet name to Raw Data
-    Sheets("Sheet1").Name = "Raw Data"
-    
+    Sheets("Sheet1").Name = "Raw Data"    
 'Add three new sheets
     Set ws = Sheets.Add
     Set ws3 = Sheets.Add
     Set ws2 = Sheets.Add
     ws.Name = "Sheet1"
-    ws3.Name = "Sheet2"
-    ws2.Name = "Sheet3"
-   
+    ws3.Name = "Orders Entered"
+    ws2.Name = "Sheet3"   
 'Copy the Raw Data to Sheet1
     With ws
         Dim sourceSheet As Worksheet
@@ -26,9 +23,7 @@ Sub ListSalesOrders()
         Set destinationSheet = Sheets("Sheet1")
         Set sourceRange = sourceSheet.Range("A:Q")
         sourceRange.Copy destinationSheet.Range("A1")
-    End With
-
-    
+    End With 
 'Delete Row if non-Client Coordinator order (ZCR and ZDR are non-CC order types)
     With ws
         .AutoFilterMode = False
@@ -42,7 +37,6 @@ Sub ListSalesOrders()
         End With
         .AutoFilterMode = False
     End With
-
 'Delete Row if Fuel Surcharge (100100)
     With ws
         .AutoFilterMode = False
@@ -54,14 +48,12 @@ Sub ListSalesOrders()
         End With
         .AutoFilterMode = False
     End With
-
 'Remove fields from Sheet1 to  remove need for Change Layout field removal step during SAP Export
 'Fields removed:
 'Customer Reference, Material Description, Schedule line number, Order Quantity (Item), Confirmed Quantity (Item),
 'Delivery Status Description, Delivery Date, Goods Issue Date, Material Availability Date, Partner Name
 Sheets("Sheet1").Activate
 Range("C:C,I:I,J:J,K:K,L:L,M:M,N:N,O:O,P:P,Q:Q").Delete
-    
 'Copy/paste all data, except for Material Number Column, from Sheet1 to Sheet3
     With ws
         Dim sourceSheet2 As Worksheet
@@ -72,7 +64,6 @@ Range("C:C,I:I,J:J,K:K,L:L,M:M,N:N,O:O,P:P,Q:Q").Delete
         Set sourceRange2 = sourceSheet2.Range("A:F")
         sourceRange2.Copy destinationSheet2.Range("A1")
     End With
-
 'Remove Dupes by Sales Document on last sheet (Sheet3)
     With ws2
         .AutoFilterMode = False
@@ -82,18 +73,16 @@ Range("C:C,I:I,J:J,K:K,L:L,M:M,N:N,O:O,P:P,Q:Q").Delete
             End With
         .AutoFilterMode = False
     End With
-
 'Copy/paste only the Created by Column from Sheet3 to Sheet2
     With ws2
         Dim sourceSheet3 As Worksheet
         Dim destinationSheet3 As Worksheet
         Dim sourceRange3 As Range
         Set sourceSheet3 = Sheets("Sheet3")
-        Set destinationSheet3 = Sheets("Sheet2")
+        Set destinationSheet3 = Sheets("Orders Entered")
         Set sourceRange3 = sourceSheet3.Range("D:D")
         sourceRange3.Copy destinationSheet3.Range("A1")
     End With
-
 'Remove Created by Column Dupes on Sheet2
     With ws3
         .AutoFilterMode = False
@@ -103,7 +92,6 @@ Range("C:C,I:I,J:J,K:K,L:L,M:M,N:N,O:O,P:P,Q:Q").Delete
             End With
         .AutoFilterMode = False
     End With
-    
 'Remove SAP_WFRT Created by data point
     With ws3
         Dim Rng5 As Range
@@ -116,10 +104,9 @@ Range("C:C,I:I,J:J,K:K,L:L,M:M,N:N,O:O,P:P,Q:Q").Delete
             End If
         Next i
     End With
-    
 'Add SO Entered - Line Items, SO Entered, and Orders per Day columns and corresponding formulas to Sheet2
     With ws3
-        Sheets("Sheet2").Activate
+        Sheets("Orders Entered").Activate
         Cells(1, 2).Value = "SO Entered - Line Items"
         Cells(2, 2).Value = "=COUNTIFS(Sheet1!D:D,A2)"
         Range("B2").AutoFill Destination:=Range("B2:B" & Cells(Rows.Count, "A").End(xlUp).Row)
@@ -130,4 +117,6 @@ Range("C:C,I:I,J:J,K:K,L:L,M:M,N:N,O:O,P:P,Q:Q").Delete
         Cells(2, 4).Value = "=C2/COUNT(UNIQUE(Sheet3!C:C),A2)"
         Range("D2").AutoFill Destination:=Range("D2:D" & Cells(Rows.Count, "A").End(xlUp).Row)
     End With
-End Sub
+'Move 'Orders Entered' Sheet to first position
+    Sheets("Orders Entered").Move Before:=Sheets(1)
+End Sub 
