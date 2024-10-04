@@ -24,9 +24,10 @@ Sub ListSalesOrders()
         Dim sourceRange As Range
         Set sourceSheet = Sheets("Raw Data")
         Set destinationSheet = Sheets("Sheet1")
-        Set sourceRange = sourceSheet.Range("A:G")
+        Set sourceRange = sourceSheet.Range("A:Q")
         sourceRange.Copy destinationSheet.Range("A1")
     End With
+
     
 'Delete Row if non-Client Coordinator order (ZCR and ZDR are non-CC order types)
     With ws
@@ -53,6 +54,13 @@ Sub ListSalesOrders()
         End With
         .AutoFilterMode = False
     End With
+
+'Remove fields from Sheet1 to  remove need for Change Layout field removal step during SAP Export
+'Fields removed:
+'Customer Reference, Material Description, Schedule line number, Order Quantity (Item), Confirmed Quantity (Item),
+'Delivery Status Description, Delivery Date, Goods Issue Date, Material Availability Date, Partner Name
+Sheets("Sheet1").Activate
+Range("C:C,I:I,J:J,K:K,L:L,M:M,N:N,O:O,P:P,Q:Q").Delete
     
 'Copy/paste all data, except for Material Number Column, from Sheet1 to Sheet3
     With ws
